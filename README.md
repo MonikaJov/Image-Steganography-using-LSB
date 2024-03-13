@@ -82,7 +82,6 @@ This project consists of the following:
 
 • Documentation: The documentation is the file that you are currently reading. It includes the research that I’ve done, how the project works, how to use it and sources I have used to create it.
 
-I tested the project if it would work if the image with the secret message was transmitted via mail. After sending the image through mail, I downloaded it and I attempted to extract the message and was able to do that without any loss or corruption. I also tried compressing the image and decompressing it and was again able to extract the message without any loss or corruption.
 ## Programming Language and Libraries:
 
 Programming language: Java, JDK version 17
