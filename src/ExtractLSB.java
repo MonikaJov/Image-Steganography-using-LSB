@@ -40,33 +40,34 @@ public class ExtractLSB {
 			}
 		}
 		return pixels;
-	};
+	}
 	
-	private static String ExtractMessageFromPixels(Pixel[] pixels) {
+	private static String ExtractMessageFromPixels(Pixel[] pixels) { //all pixels. Select all pixels with a message until we the pixel that means end
 		boolean completed = false;
 		int pixelArrayIndex = 0; 
 		StringBuilder messageBuilder = new StringBuilder("");
-		while(completed == false) {
-			Pixel[] pixelsToRead = new Pixel[3];
+		while(!completed) { //untill we get all characters
+			Pixel[] pixelsToRead = new Pixel[3]; // three pixels
 			for(int i = 0; i < 3; i++) {
 				pixelsToRead[i] = pixels[pixelArrayIndex];
 				pixelArrayIndex++;
 			}
 			messageBuilder.append(ConvertPixelsToCharacter(pixelsToRead));
-			if(IsEndOfMessage(pixelsToRead[2]) == true) {
+			if(IsEndOfMessage(pixelsToRead[2])) {
 				completed = true;
 			}
 		}
 		return messageBuilder.toString();
 	}
 	
-	private static char ConvertPixelsToCharacter(Pixel[] pixelsToRead) {
+	private static char ConvertPixelsToCharacter(Pixel[] pixelsToRead) { // 3 pixels with message
 		ArrayList<String> binaryValues = new ArrayList<String>();
 		for(int i = 0; i < pixelsToRead.length; i++) {
-			String[] currentBinary = TurnPixelIntegersToBinary(pixelsToRead[i]);
-			binaryValues.add(currentBinary[0]);
-			binaryValues.add(currentBinary[1]);
-			binaryValues.add(currentBinary[2]);
+			String[] currentBinary = TurnPixelIntegersToBinary(pixelsToRead[i]); // every pixel is turned is array of R G and B value
+
+			binaryValues.add(currentBinary[0]); //add R to binaryValues
+			binaryValues.add(currentBinary[1]); //add G to binaryValues
+			binaryValues.add(currentBinary[2]); //add B to binaryValues ...until all 3 pixels are passed
 		}
 		return ConvertBinaryValuesToCharacter(binaryValues);
 	}
@@ -86,13 +87,13 @@ public class ExtractLSB {
 		return true;
 	}
 	
-	private static char ConvertBinaryValuesToCharacter(ArrayList<String> binaryValues) {
+	private static char ConvertBinaryValuesToCharacter(ArrayList<String> binaryValues) { //array of all R G Bs of 3 pixels
 		StringBuilder endBinary = new StringBuilder("");
 		for(int i = 0; i < binaryValues.size()-1; i++) {
-			endBinary.append(binaryValues.get(i).charAt(binaryValues.get(i).length()-1));
+			endBinary.append(binaryValues.get(i).charAt(binaryValues.get(i).length()-1)); // get the last bit of every R G and B
 		}
 		String endBinaryString = endBinary.toString();
-		String noZeros = RemovePaddedZeros(endBinaryString);
+		String noZeros = RemovePaddedZeros(endBinaryString); //remove zeros
 		int ascii = Integer.parseInt(noZeros, 2);
 		return (char) ascii;
 	}

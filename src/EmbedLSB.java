@@ -28,19 +28,13 @@ public class EmbedLSB {
 		}
 		
 	}
-	/*
-	 * Copies the image into a new buffered image.
-	 */
 	private static BufferedImage GetImage(BufferedImage image) {
 		ColorModel colorModel = image.getColorModel();
 		boolean isAlphaPremultiplied = colorModel.isAlphaPremultiplied();
 		WritableRaster raster = image.copyData(null);
 		return new BufferedImage(colorModel, raster, isAlphaPremultiplied, null);
 	}
-	
-	/*
-	 * Gets two dimensional array of colors from the image to encrypt.
-	 */
+
 	private static Pixel[] GetPixelArray(BufferedImage bufferedImage){
 		int height = bufferedImage.getHeight();
 		int width = bufferedImage.getWidth();
@@ -54,20 +48,14 @@ public class EmbedLSB {
 			}
 		}
 		return pixels;
-	};
-	
-	/*
-	 * Converting the message into binary.
-	 */
+	}
+
 	private static String[] ConvertMessageToBinary(String message) {
 		int[] messageInAscii = ConvertMessageToAscii(message);
 		String[] binary = ConvertAsciiToBinary(messageInAscii);
 		return binary;
 	}
-	
-	/*
-	 * Converting the message into ASCII.
-	 */
+
 	private static int[] ConvertMessageToAscii(String message) {
 		int[] messageCharactersInAscii = new int[message.length()];
 		for(int i = 0; i < message.length(); i++) {
@@ -76,10 +64,7 @@ public class EmbedLSB {
 		}
 		return messageCharactersInAscii;
 	}
-	
-	/*
-	 * Converting the ASCII code to Binary.
-	 */
+
 	private static String[] ConvertAsciiToBinary(int[] messageInAscii) {
 		String[] messageInBinary = new String[messageInAscii.length];
 		for(int i = 0; i < messageInAscii.length; i++) {
@@ -88,10 +73,7 @@ public class EmbedLSB {
 		}
 		return messageInBinary;
 	}
-	
-	/*
-	 * Left padding the binary value with zeros to make an 8 digit string.
-	 */
+
 	private static String LeftPadZeros(String value) {
 		StringBuilder paddedValue = new StringBuilder("00000000");
 		int offSet = 8 - value.length();
@@ -103,11 +85,8 @@ public class EmbedLSB {
 		}
 		return paddedValue.toString();
 	}
-	
-	/*
-	 * Encoding the message in the pixels.
-	 */
-	private static void EncodeMessageBinaryInPixels(Pixel[] pixels, String[] messageBinary) {
+
+	private static void EncodeMessageBinaryInPixels(Pixel[] pixels, String[] messageBinary) { //for every character of the message take 3 pixels
 		int pixelIndex = 0;
 		boolean isLastCharacter = false;
 		for(int i = 0; i < messageBinary.length; i++) {
@@ -120,40 +99,43 @@ public class EmbedLSB {
 		}
 	}
 	
-	private static void ChangePixelsColor(String messageBinary, Pixel[] pixels, boolean isLastCharacter) {
+	private static void ChangePixelsColor(String messageBinary, Pixel[] pixels, boolean isLastCharacter) { //for every array of 3 pixels (without the last one), takes 3 bits from the character
 		int messageBinaryIndex = 0;
 		for(int i =0; i < pixels.length-1; i++) {
-			char[] messageBinaryChars = new char[] {messageBinary.charAt(messageBinaryIndex), messageBinary.charAt(messageBinaryIndex+1), messageBinary.charAt(messageBinaryIndex+2)};
+			char[] messageBinaryChars = new char[] {messageBinary.charAt(messageBinaryIndex), messageBinary.charAt(messageBinaryIndex+1), messageBinary.charAt(messageBinaryIndex+2)}; //devide characteр in 3 parts
 			String[] pixelRGBBinary = GetPixelsRGBBinary(pixels[i], messageBinaryChars);
 			pixels[i].setColor(GetNewPixelColor(pixelRGBBinary));
 			messageBinaryIndex = messageBinaryIndex + 3;
 		}
-		if(isLastCharacter == false) {
+		if(!isLastCharacter) { // for the last pixel, take the last 2 bits from the character and give them to R and G. For B give 1
 			char[] messageBinaryChars = new char[] {messageBinary.charAt(messageBinaryIndex), messageBinary.charAt(messageBinaryIndex+1), '1'};
 			String[] pixelRGBBinary = GetPixelsRGBBinary(pixels[pixels.length-1], messageBinaryChars);
 			pixels[pixels.length-1].setColor(GetNewPixelColor(pixelRGBBinary));
-		}else {
+		}else { // for the last pixel, take the last 2 bits from the character and give them to R and G. For B give 0
 			char[] messageBinaryChars = new char[] {messageBinary.charAt(messageBinaryIndex), messageBinary.charAt(messageBinaryIndex+1), '0'};
-			String[] pixelRGBBinary = GetPixelsRGBBinary(pixels[pixels.length-1], messageBinaryChars);
-			pixels[pixels.length-1].setColor(GetNewPixelColor(pixelRGBBinary));
+			String[] pixelRGBBinary = GetPixelsRGBBinary(pixels[pixels.length-1], messageBinaryChars); //get new RGBs
+			pixels[pixels.length-1].setColor(GetNewPixelColor(pixelRGBBinary)); // set new color
 		}
 	}
-	
-	private static String[] GetPixelsRGBBinary(Pixel pixel, char[] messageBinaryChars) {
+	//change the LSB of the pixel
+	private static String[] GetPixelsRGBBinary(Pixel pixel, char[] messageBinaryChars) { // messageBinaryChars - 3 bits from the message
 		String[] pixelRGBBinary = new String[3];
-		pixelRGBBinary[0] = ChangePixelBinary(Integer.toBinaryString(pixel.getColor().getRed()), messageBinaryChars[0]);
+		//R
+		pixelRGBBinary[0] = ChangePixelBinary(Integer.toBinaryString(pixel.getColor().getRed()), messageBinaryChars[0]); // messageBinaryChars[0] - first bit od the 3bit substring
+		//G
 		pixelRGBBinary[1] = ChangePixelBinary(Integer.toBinaryString(pixel.getColor().getGreen()), messageBinaryChars[1]);
+		//B
 		pixelRGBBinary[2] = ChangePixelBinary(Integer.toBinaryString(pixel.getColor().getBlue()), messageBinaryChars[2]);
 		return pixelRGBBinary;
 	}
 	
 	private static String ChangePixelBinary(String pixelBinary, char messageBinaryChar) {
 		StringBuilder sb = new StringBuilder(pixelBinary);
-		sb.setCharAt(pixelBinary.length()-1, messageBinaryChar);
+		sb.setCharAt(pixelBinary.length()-1, messageBinaryChar); //change the last bit of every R, G and B
 		return sb.toString();
 	}
 	
-	private static Color GetNewPixelColor(String[] colorBinary) {
+	private static Color GetNewPixelColor(String[] colorBinary) { // get new color
 		return new Color(Integer.parseInt(colorBinary[0], 2), Integer.parseInt(colorBinary[1], 2), Integer.parseInt(colorBinary[2], 2));
 	}
 	
@@ -161,7 +143,7 @@ public class EmbedLSB {
 		for(int i = 0; i < newPixels.length; i++) {
 			newImage.setRGB(newPixels[i].getX(), newPixels[i].getY(), newPixels[i].getColor().getRGB());
 		}
-	};
+	}
 	
 	private static void SaveNewFile(BufferedImage newImage, File newImageFile) {
 		try {

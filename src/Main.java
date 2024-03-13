@@ -26,7 +26,7 @@ public class Main {
             Generate_image(message, input_path, output_path);
         }
         else if(action.equals("B")){
-//          [74, 8, 90, 50, 2, 56, -11, -7, -75, -60, -117, 108, -108, -91, -117, 114, -109, -77, 18, 51, -5, 27, -56, 62, -123, -125, -25, 24, 73, -26, -66, -82]
+
             System.out.println("Enter the secret keys with [].");
             String input = myObj.nextLine();
             String[] byteStrings = input.substring(1, input.length() - 1).split(", ");
@@ -53,13 +53,13 @@ public class Main {
 
         TextEncryptor textEncryptor = new TextEncryptor();
 
-        SecretKey pair = textEncryptor.generateAESKey();
+        SecretKey key = textEncryptor.generateAESKey();
         Cipher cipher = textEncryptor.getCipher();
 
-        byte[] secretKeyBytes = pair.getEncoded();
+        byte[] secretKeyBytes = key.getEncoded();
 
         //Encrypting message and embedding it to a image
-        String encryptedText = textEncryptor.encrypt(message, pair, cipher);
+        String encryptedText = textEncryptor.encrypt(message, key, cipher);
         if(imageFile != null) {
             EmbedLSB.Embed(imageFile, encryptedText, output_path);
             System.out.println("Message is hidden successfully");

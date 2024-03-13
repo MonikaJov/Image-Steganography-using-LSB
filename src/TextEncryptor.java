@@ -35,9 +35,6 @@ public class TextEncryptor {
         byte[] inputBytes = input.getBytes(StandardCharsets.UTF_8);
         byte[] encryptedBytes = cipher.doFinal(inputBytes);
 
-        // Encode the encrypted bytes using Base64
-        // Encoding the data into a standard format, such as Base64, ensures that the data is represented in
-        // a consistent manner that can be handled by the encryption algorithm.
         String encryptedBase64 = Base64.getEncoder().encodeToString(encryptedBytes);
         return encryptedBase64;
     }
