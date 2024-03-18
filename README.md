@@ -212,3 +212,21 @@ decrypt: This method decrypts the input Base64-encoded cipher text using the pro
 
 • Tutorial for decryption of text: https://www.tutorialspoint.com/java_cryptography/java_cryptography_decrypting_data.htm 
 
+### Screenshots:
+
+![image](https://github.com/MonikaJov/Image-Steganography-using-LSB/assets/86190069/49f06053-261c-4f80-8ac2-ebdc30fa4c18)
+
+![image](https://github.com/MonikaJov/Image-Steganography-using-LSB/assets/86190069/7dfa88c5-705e-439b-84fe-2bfae0accffa)
+
+Original image vs image with hidden message:
+
+![image](https://github.com/MonikaJov/Image-Steganography-using-LSB/assets/86190069/e9843225-1045-4c64-adac-3ea3111b6e8d)
+
+![image](https://github.com/MonikaJov/Image-Steganography-using-LSB/assets/86190069/948a0059-4f60-4c61-a14f-9bfec7a293a2)
+
+The image with a hidden message is a little bigger than the orifginal image.
+
+![image](https://github.com/MonikaJov/Image-Steganography-using-LSB/assets/86190069/dc5d5dac-ea92-4ec7-a80a-0e5ef3de2e1b)
+
+![image](https://github.com/MonikaJov/Image-Steganography-using-LSB/assets/86190069/cd0d887a-a622-494a-95fe-2bbb26da635b)
+
